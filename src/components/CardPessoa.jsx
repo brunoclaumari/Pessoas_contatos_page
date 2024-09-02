@@ -1,8 +1,5 @@
 
 import styles from '@/styles/ListaCardPessoa.module.css';
-import { Button } from 'react-dom'
-
-
 
 export default function CardPessoa( props){  
 

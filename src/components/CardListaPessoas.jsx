@@ -1,8 +1,9 @@
 
 import styles from '@/styles/ListaCardPessoa.module.css';
-import { Api } from '@/pages/services/api';
+
 import { useEffect, useState } from "react";
 import CardPessoa from './CardPessoa';
+import { Api } from '../services/api';
 
 class Pessoa {
     nome= "";
@@ -16,6 +17,7 @@ export default function CardListaPessoas() {
 
     async function fetchPessoas() {
         try {
+        
         const response = await Api.get("api/Pessoa/semcontatos");
         console.log(response.data)
         setPessoas(response.data);
