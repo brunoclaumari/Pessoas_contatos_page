@@ -6,27 +6,38 @@
   margin-bottom: 20px;
   border-radius: 10px;
 
-  width: 85%; /*80%*/
+  height: 165px;
+  width: 330px;
+  /*
+  width: 90%; 
+  85%
+  */
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-.edit_icon{
-    color: rgb(89, 149, 189);     
-    cursor: 'pointer' ;
-    margin-right: 10px;
-
+.edit_icon {
+  color: rgb(89, 149, 189);
+  cursor: "pointer";
+  margin-right: 10px;
 }
 
 .edit_icon:hover {
-    color: rgb(137, 191, 56);
+  color: rgb(137, 191, 56);
 }
 
 .delete_icon {
-    color: red;
-    cursor: 'pointer';
-    margin: '0 10px';    
+  color: red;
+  cursor: "pointer";
+  margin: "0 10px";
 }
 
-.delete_icon:hover{
-    color: orange;
+.delete_icon:hover {
+  color: orange;
+}
+
+@media (max-width: 600px) {
+  .card_div {
+    /* display: none; */
+    width: 85%; /*80%*/
+  }
 }

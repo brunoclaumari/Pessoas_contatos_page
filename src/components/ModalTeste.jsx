@@ -1,19 +1,19 @@
+import * as React from "react";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { Add } from "@mui/icons-material";
+import { Alert } from "@mui/material";
+import { Api } from "@/services/api";
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
-
-
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { Add } from '@mui/icons-material';
-import { Alert } from '@mui/material';
-
-export default function ModalTeste() {
-  const [open, setOpen] = React.useState(false);
+export default function ModalTeste({ handleRenderiza, handleClose, handleClickOpen, open, pessoaAtual }) {
+  /* const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -21,57 +21,107 @@ export default function ModalTeste() {
 
   const handleClose = () => {
     setOpen(false);
-  };
+  }; */ 
+  const [nomeAtual, setNome] = React.useState("");
+  const [emailAtual, setEmail] = React.useState("");
 
-  async function handleSalvaPessoa(nome, email){
+  React.useEffect(()=>{
+    setNome(pessoaAtual._nome);
+    setEmail(pessoaAtual._email); 
+  },[open]) 
+
+  function handleSalvaPessoa( nome, email) {
     try {
-        
-        /* const response = await Api.post("api/Pessoa/semcontatos");
-        console.log(response.data) ; */
-        alert(`O ${nome} foi salvo com sucesso`);
-        
-
-        } catch (error) {
-            console.error("Erro :", error);
-            alert(`Ocorreu um erro ${error}`);
-/*            return <Alert variant="filled" severity="error">
-            
-            </Alert> */
-        }
+      //let mensagem = "";
+      const obj = {
+        id:pessoaAtual._id,
+        nome: nomeAtual,
+        email: emailAtual,
+        contatos: []        
+      }
+      
+      let acao = pessoaAtual._id <= 0?"salvo":"alterado";
+      
+      if(pessoaAtual._id <= 0){
+        //Cria novo
+        salvaNovaPessoa(obj, acao);
+      }
+      else {
+        //Altera
+        alteraPessoa(obj, acao);
+      } 
+      
+    } catch (error) {
+/*       let msgErro = error.response?.data?.erros;
+      console.error("Erro :", error.response?.data?.erros);
+      //toast.error(`Erro: ${msgErro}`); 
+      handleRenderiza(0, msgErro);   */   
     }
+  }
+
+  async function salvaNovaPessoa(obj,acao){
+    await Api.post("api/Pessoa",obj)
+        .then((response)=>{
+          console.log(response.data);
+          let mensagem = `A pessoa ${nome} foi ${acao} com sucesso!!`;
+          console.log(mensagem);
+          handleRenderiza(1, mensagem);
+
+        }).catch((error)=>{
+          let msgErro = error.response?.data?.erros;
+          console.log("Erro :", error.response?.data?.erros);                   
+          handleRenderiza(0, msgErro);   
+
+        });
+
+  }
+
+  async function alteraPessoa(obj,acao){
+    await Api.put(`api/Pessoa/${pessoaAtual._id}`,obj)
+        .then((response)=>{
+          console.log(response.data);
+          let mensagem = `A pessoa ${nome} foi ${acao} com sucesso!!`;
+          handleRenderiza(1, mensagem);
+        }).catch((error)=>{
+          let msgErro = error.response?.data?.erros;
+          console.log("Erro :", error.response?.data?.erros);          
+          handleRenderiza(0, msgErro);   
+        });
+  }
+
+  
 
   return (
     <>
-        
-{/*       <Button variant="outlined" onClick={handleClickOpen}>
+      {/*       <Button variant="outlined" onClick={handleClickOpen}>
         Inserir novo
       </Button> */}
-      <div style={{textAlign : 'center', paddingTop:'12px' }}>
-      <Button onClick={handleClickOpen}  variant="contained" endIcon={<Add />}>
-        Inserir nova pessoa
+      {/* <ToastContainer limit={1} containerId={"modal1"} position={"top-right"} /> */}
+      <div style={{ textAlign: "center", paddingTop: "12px" }}>
+        <Button onClick={handleClickOpen} variant="contained" endIcon={<Add />}>
+          Inserir nova pessoa
         </Button>
       </div>
-        <br />
-        
-      
+      <br />
+
       <Dialog
         open={open}
-        onClose={handleClose}
+        /* onClose={handleClose} */
         PaperProps={{
-          component: 'form',
+          component: "form",
           onSubmit: (event) => {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
             const nome = formJson.nome;
             const email = formJson.email;
-             handleSalvaPessoa(nome,email);
+            handleSalvaPessoa(nome, email);
             console.log(`Nome: ${nome} | Email: ${email}`);
-            handleClose();
+            handleClose();            
           },
         }}
       >
-        <DialogTitle>Cadastro de pessoa</DialogTitle>
+        <DialogTitle>{pessoaAtual._id <=0?'Cadastro':'Alteração'} de pessoa - id: {pessoaAtual._id}</DialogTitle>
         <DialogContent>
           {/* <DialogContentText>
             To subscribe to this website, please enter your email address here. We
@@ -81,8 +131,11 @@ export default function ModalTeste() {
             autoFocus
             required
             margin="dense"
-            id="nome" name="nome"
+            id="nome"
+            name="nome"
             label="Nome"
+            value={nomeAtual}
+            onChange={(e) => setNome(e.target.value)}
             type="text"
             fullWidth
             variant="outlined"
@@ -94,6 +147,8 @@ export default function ModalTeste() {
             id="email"
             name="email"
             label="Email"
+            value={emailAtual}
+            onChange={(e) => setEmail(e.target.value)}
             type="email"
             fullWidth
             variant="outlined"

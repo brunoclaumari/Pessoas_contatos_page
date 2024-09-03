@@ -3,10 +3,40 @@
     background-color: rgb(160, 209, 209);
     border-radius: 10px;
     margin: auto;
-    width: 80%;
-    min-height: 50vh;
+    width:90%;
+    min-height: 80vh;
     /* //border: 1px solid blue; */
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.wrapper {
+/*     display: grid;
+    grid-template-columns: 1fr; 
+    
+    height: 400px;
+    */
+    display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+}
+
+
+@media screen and (min-width: 850px) {
+/*     .wrapper {
+        grid-template-columns: 1fr 1fr ;
+    }
+
+    */
+    .conteinerLista{
+        width: 98%;
+    } 
+}
+
+@media screen and (min-width: 1100px) {
+    /* .wrapper {
+        grid-template-columns: 1fr 1fr 1fr;
+        align-content: center;
+    }  */   
 }
 
 
