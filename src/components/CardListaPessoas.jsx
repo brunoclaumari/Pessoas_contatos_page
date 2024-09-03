@@ -63,9 +63,8 @@ export default function CardListaPessoas() {
             Api.get("api/Pessoa/semcontatos")
             .then((response)=>{
                 console.log(response.data)
-                setPessoas(response.data);
-                if(!toast.isActive())
-                    toast.success("Dados de pessoas carregados com sucesso")
+                setPessoas(response.data);                
+                //toast.success("Dados de pessoas carregados com sucesso",{position: 'top-center'})
             }).catch((error)=>{
                 console.error("Erro ao carregar dados dos :", error);
                 toast.error("Falha ao carregar os dados");

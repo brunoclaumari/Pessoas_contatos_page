@@ -30,7 +30,7 @@ export default function ModalTeste({ handleRenderiza, handleClose, handleClickOp
     setEmail(pessoaAtual._email); 
   },[open]) 
 
-  function handleSalvaPessoa( nome, email) {
+  async function handleSalvaPessoa( nome, email) {
     try {
       //let mensagem = "";
       const obj = {
@@ -44,11 +44,11 @@ export default function ModalTeste({ handleRenderiza, handleClose, handleClickOp
       
       if(pessoaAtual._id <= 0){
         //Cria novo
-        salvaNovaPessoa(obj, acao);
+        await salvaNovaPessoa(obj, acao);
       }
       else {
         //Altera
-        alteraPessoa(obj, acao);
+        await alteraPessoa(obj, acao);
       } 
       
     } catch (error) {
@@ -63,7 +63,7 @@ export default function ModalTeste({ handleRenderiza, handleClose, handleClickOp
     await Api.post("api/Pessoa",obj)
         .then((response)=>{
           console.log(response.data);
-          let mensagem = `A pessoa ${nome} foi ${acao} com sucesso!!`;
+          let mensagem = `A pessoa ${obj.nome} foi ${acao} com sucesso!!`;
           console.log(mensagem);
           handleRenderiza(1, mensagem);
 
@@ -80,7 +80,7 @@ export default function ModalTeste({ handleRenderiza, handleClose, handleClickOp
     await Api.put(`api/Pessoa/${pessoaAtual._id}`,obj)
         .then((response)=>{
           console.log(response.data);
-          let mensagem = `A pessoa ${nome} foi ${acao} com sucesso!!`;
+          let mensagem = `A pessoa ${obj.nome} foi ${acao} com sucesso!!`;
           handleRenderiza(1, mensagem);
         }).catch((error)=>{
           let msgErro = error.response?.data?.erros;
