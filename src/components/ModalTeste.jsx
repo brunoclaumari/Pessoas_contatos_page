@@ -4,13 +4,11 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Add } from "@mui/icons-material";
-import { Alert } from "@mui/material";
 import { Api } from "@/services/api";
-import { ToastContainer, toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+//import { toast } from 'react-toastify';
+//import "react-toastify/dist/ReactToastify.css";
 
 export default function ModalTeste({ handleRenderiza, handleClose, handleClickOpen, open, pessoaAtual }) {
   /* const [open, setOpen] = React.useState(false);
@@ -31,32 +29,23 @@ export default function ModalTeste({ handleRenderiza, handleClose, handleClickOp
   },[open]) 
 
   async function handleSalvaPessoa( nome, email) {
-    try {
-      //let mensagem = "";
-      const obj = {
-        id:pessoaAtual._id,
-        nome: nomeAtual,
-        email: emailAtual,
-        contatos: []        
-      }
-      
-      let acao = pessoaAtual._id <= 0?"salvo":"alterado";
-      
-      if(pessoaAtual._id <= 0){
-        //Cria novo
-        await salvaNovaPessoa(obj, acao);
-      }
-      else {
-        //Altera
-        await alteraPessoa(obj, acao);
-      } 
-      
-    } catch (error) {
-/*       let msgErro = error.response?.data?.erros;
-      console.error("Erro :", error.response?.data?.erros);
-      //toast.error(`Erro: ${msgErro}`); 
-      handleRenderiza(0, msgErro);   */   
+    const obj = {
+      id:pessoaAtual._id,
+      nome: nomeAtual,
+      email: emailAtual,
+      contatos: []        
     }
+    
+    let acao = pessoaAtual._id <= 0?"salvo":"alterado";
+    
+    if(pessoaAtual._id <= 0){
+      //Cria novo
+      await salvaNovaPessoa(obj, acao);
+    }
+    else {
+      //Altera
+      await alteraPessoa(obj, acao);
+    } 
   }
 
   async function salvaNovaPessoa(obj,acao){
@@ -68,24 +57,29 @@ export default function ModalTeste({ handleRenderiza, handleClose, handleClickOp
           handleRenderiza(1, mensagem);
 
         }).catch((error)=>{
-          let msgErro = error.response?.data?.erros;
+          const msgErro = error.response?.data?.erros[0];
           console.log("Erro :", error.response?.data?.erros);                   
           handleRenderiza(0, msgErro);   
 
         });
-
   }
 
-  async function alteraPessoa(obj,acao){
+
+  
+  async function alteraPessoa(obj,acao){    
+
     await Api.put(`api/Pessoa/${pessoaAtual._id}`,obj)
         .then((response)=>{
           console.log(response.data);
           let mensagem = `A pessoa ${obj.nome} foi ${acao} com sucesso!!`;
           handleRenderiza(1, mensagem);
         }).catch((error)=>{
-          let msgErro = error.response?.data?.erros;
-          console.log("Erro :", error.response?.data?.erros);          
-          handleRenderiza(0, msgErro);   
+          if (error.response){
+            const msgErro = error.response.data?.erros[0];
+            console.log("Erro :", error.response?.data?.erros);          
+            handleRenderiza(0, msgErro);   
+            
+          }
         });
   }
 

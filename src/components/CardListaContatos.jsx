@@ -10,6 +10,8 @@ import { Button, TextField } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import CardContatos from './CardContatos';
+
 
 class Pessoa {
     nome= "";
@@ -18,19 +20,20 @@ class Pessoa {
     id = 0;
   }
 
-export default function CardListaPessoas() {
-    const [pessoas, setPessoas] = useState([]);
+export default function CardListaContatos( {pessoaId}) {
+    const [contatos, setContatos] = useState([]);
 
     const [open, setOpen] = useState(false);
     const [renderiza, setRenderiza] = useState(false);
 
-    const [pessoaAtual,setPessoaAtual] = useState({_id:0,  _nome:"",_email:""});
+    const [contatoAtual,setContatoAtual] = useState({_id:0,  _nome:"",_email:""});
 
 
     //1 = sucesso,0 = erro, -1 = warning
     const handleRenderiza = (numero,mensagem) => {
         
-        if(numero === 1){                       
+        if(numero === 1){  
+            fetchContatos();           
             toast.success(mensagem);
         }
         else if(numero === 0){
@@ -39,7 +42,6 @@ export default function CardListaPessoas() {
         else if(numero === -1){
             toast.warning(mensagem);
         }  
-        fetchPessoas(); 
              
       };  
 
@@ -51,27 +53,25 @@ export default function CardListaPessoas() {
   const handleClose = async () => {
 
     setOpen(false);  
-    setPessoaAtual({_id:0,  _nome:"",_email:""});
+    setContatoAtual({_id:0,  _nome:"",_email:""});
   };
 
   
 
-    function fetchPessoas() {
+    function fetchContatos() {
         try {
         
-            //const response = await Api.get("api/Pessoa/semcontatos")
-            Api.get("api/Pessoa/semcontatos")
+            //pessoaId
+            Api.get(`api/Pessoa/${pessoaId}`)
             .then((response)=>{
                 console.log(response.data)
-                setPessoas(response.data);                
+                setContatos(response.data);                
                 //toast.success("Dados de pessoas carregados com sucesso",{position: 'top-center'})
             }).catch((error)=>{
                 console.error("Erro ao carregar dados dos :", error);
                 toast.error("Falha ao carregar os dados");
-            });
-            
-        /* setEducadorSocial(response.data.educador);
-        setPsicólogos(response.data.psicologo); */
+            });           
+
         } catch (error) {
             console.error("Erro ao carregar dados dos :", error);
         }
@@ -79,7 +79,7 @@ export default function CardListaPessoas() {
 
     useEffect(() => {       
 
-		  fetchPessoas();
+		  fetchContatos();
 	}, []);
     
 
@@ -88,43 +88,25 @@ export default function CardListaPessoas() {
         
         <div className={`${styles.conteinerLista} `} >
             <ToastContainer   limit={1}/* containerId={`lista`} */  position={"top-right"} />
-            <h2 style={{textAlign : 'center', paddingTop:'12px' }} >Lista de Pessoas</h2>
-            <ModalTeste pessoaAtual={pessoaAtual} setPessoaAtual={setPessoaAtual} 
+            <h2 style={{textAlign : 'center', paddingTop:'12px' }} >Lista de Contatos</h2>
+            <ModalTeste pessoaAtual={contatoAtual} setPessoaAtual={setContatoAtual} 
             handleRenderiza={handleRenderiza} handleClose={handleClose} handleClickOpen={handleClickOpen} open={open} />
-            {/* <div>
-                <TextField
-                autoFocus
-                required
-                margin="dense"
-                id="nome" name="nome" label="Nome" type="text"
-                fullWidth
-                size='80%'
-                variant="outlined"
-            />
-                <TextField
-                autoFocus  required  margin="dense"
-                id="email"  name="email"  label="Email"
-                type="email"
-                fullWidth
-                variant="outlined"
-            />
-            <Button onClick={handleSalvaPessoa}  variant="contained" endIcon={<Add />}>
-                Inserir nova pessoa
-            </Button>
-            </div> */}
+
             <div className={`${styles.wrapper}`} >                
 
                 {/* <CardPessoa pessoaId={1} /> */}
-                    {pessoas.map((item, index)=>{
+                    {contatos !==null && contatos.map((item, index)=>{
                         /* return <p key={index}>{item.nome} - {item.email}</p>  */
-                        return <CardPessoa 
+                        return <CardContatos 
                                     key={index} 
                                     pessoaId = {item.id}
                                     nome = {item.nome}
-                                    email = {item.email}  
+                                    email = {item.email} 
+                                    telefone = {item.telefone}
+                                    whatsapp = {item.whatsapp} 
                                     handleRenderiza = {handleRenderiza}   
                                     handleClose={handleClose} handleClickOpen={handleClickOpen} open={open}  
-                                    setPessoaAtual={setPessoaAtual}                              
+                                    setPessoaAtual={setContatoAtual}                              
                                     />
                     })}
             </div>
