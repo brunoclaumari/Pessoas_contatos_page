@@ -1,7 +1,10 @@
 import CardListaContatos from "@/components/CardListaContatos";
-import { ArrowBack } from "@mui/icons-material";
+
+
+import { Inter } from "next/font/google";
+import styles from '@/styles/ListaCardContatos.module.css'
 import { useRouter } from "next/router";
-import { IoArrowBackCircleSharp } from "react-icons/io5";
+
 
 
 
@@ -11,18 +14,20 @@ export default function Contatos(props){
     const router = useRouter();
     const pessoaId = router.query.pessoaId;
 
-    function paginaAnterior(){
+    //const inter = Inter({ subsets: ["latin"] });
+
+    /* function paginaAnterior(){
         router.back()
-    }
+    } */
 
     return (
-        <div>
-            
-            <p>Pessoa passada: {pessoaId}</p>
-            {/* <ArrowBack  onClick ={()=> router.back()}/> */}
-            <IoArrowBackCircleSharp size={80} onClick={paginaAnterior} style={{ cursor: 'pointer' }}  />
+        <>
+        <div className={`${styles.main} `} >
+            {/* ${inter.className} */}
+            {/* <IoArrowBackCircleSharp size={80} onClick={paginaAnterior} style={{ cursor: 'pointer' }}  /> */}            
             <CardListaContatos pessoaId={pessoaId} />
 
         </div>
+        </>
     );
 }

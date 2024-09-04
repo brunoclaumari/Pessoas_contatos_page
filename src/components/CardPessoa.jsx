@@ -1,13 +1,15 @@
+'use client'
+
 import { Api } from "@/services/api";
 import styles from "@/styles/CardPessoa.module.css";
-import { Person } from "@mui/icons-material";
-import { Button, IconButton, DeleteIcon } from "@mui/material";
+import { Edit, Person } from "@mui/icons-material";
+import { Button, IconButton, DeleteIcon, Tooltip } from "@mui/material";
 import { useRouter } from "next/router";
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { FcContacts } from "react-icons/fc";
+import {  FcContacts } from "react-icons/fc";
 import ModalTeste from "./ModalTeste";
-import { ToastContainer, toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+/* import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css"; */
 
 
 
@@ -79,12 +81,26 @@ export default function CardPessoa({ pessoaId, nome, email, handleRenderiza, han
       </div>
       <div style={ { display:'flex', justifyContent:'space-between'} } >
         {/* <Button onClick={handleVerContato} variant="outlined">Ver contatos</Button>   */}
-        <FcContacts size={36} onClick={handleVerContato} style={{ cursor: 'pointer' }} />
+        <Tooltip title="Ver contatos">
+          <IconButton onClick={handleVerContato}>
+            <FcContacts className={styles.contato_icon}  size={36}  style={{ cursor: 'pointer' }} />
+          </IconButton>
+        </Tooltip>
         <div>
             {/* <Button  variant="contained">Editar Pessoa</Button> delete-icon */}  
 
-            <FaEdit className={styles.edit_icon} size={36} onClick={handleEdit}  style={{ cursor: 'pointer' }}  />
-            <FaTrash  className={styles.delete_icon}  size={36} onClick={handleDelete} style={{ cursor: 'pointer' }} />
+          <Tooltip title="Editar">
+            <IconButton onClick={handleEdit}>
+              <FaEdit className={styles.edit_icon} size={36}   style={{ cursor: 'pointer' }}  />              
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Excluir">
+            <IconButton onClick={handleDelete}>
+            <FaTrash  className={styles.delete_icon}  size={36}  style={{ cursor: 'pointer' }} />
+            </IconButton>
+          </Tooltip>
+
+            
             
         </div>      
 

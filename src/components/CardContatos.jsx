@@ -1,32 +1,40 @@
 import { Api } from "@/services/api";
-import styles from "@/styles/CardPessoa.module.css";
+import styles from "@/styles/CardContato.module.css";
 import { Person } from "@mui/icons-material";
-import { Button, IconButton, DeleteIcon } from "@mui/material";
+import { Button, IconButton, DeleteIcon, Tooltip } from "@mui/material";
 import { useRouter } from "next/router";
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { FcContacts } from "react-icons/fc";
-import ModalTeste from "./ModalTeste";
-import { ToastContainer, toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+
+
+/* import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css"; */
 
 
 
 export default function CardContatos({ 
-  pessoaId, nome, email, telefone,whatsapp,
-  handleRenderiza, handleClose, handleClickOpen, open,setPessoaAtual  }) {
+  contatoId, nome, email, telefone,whatsapp, pessoaId,
+  handleRenderiza, handleClose, handleClickOpen, open, setContatoAtual  }) {  
 
-  
-
-  const idToast = `pes${pessoaId}`;
+  const idToast = `pes${contatoId}`;
   //console.log(`toast: ${idToast}`);
 
     const router = useRouter();
     function handleVerContato(){
-        router.push(`/${pessoaId}/contatos`);
+        router.push(`/${contatoId}/contatos`);
     } 
     
     function handleEdit(){
-      setPessoaAtual( { _id: pessoaId, _nome: nome, _email: email} );
+      setContatoAtual( 
+        { 
+          _id: contatoId, 
+          _nome: nome, 
+          _email: email, 
+          _telefone:telefone, 
+          _whatsapp:whatsapp, 
+          _pessoaId:pessoaId
+        } 
+      );
+      
       handleClickOpen();
     }
 
@@ -36,12 +44,12 @@ export default function CardContatos({
 
     async function handleDelete(){
       
-      let confirmacaoUsuario = confirm(`Você tem certeza de que deseja deletar a pessoa ${nome}?`);
+      let confirmacaoUsuario = confirm(`Você tem certeza de que deseja deletar o contato ${nome}?`);
   
       if(confirmacaoUsuario){
         try {
         
-          const response = await Api.delete(`api/Pessoa/${pessoaId}`);
+          const response = await Api.delete(`api/Contato/${contatoId}`);
           let mensagem = `Pessoa ${nome} foi excluído com sucesso`;
           console.log(mensagem);         
           
@@ -63,32 +71,33 @@ export default function CardContatos({
 
   return (
     <>
-{/*     <ModalTeste 
-    handleRenderiza={handleRenderiza} handleClose={handleClose} 
-    handleClickOpen={handleClickOpen} open={open} alteracao
-    /> */}
-    {/* <ToastContainer limit={1} containerId={idToast} position={"top-right"} /> */}
+
     <div className={styles.card_div} /* onSubmit={handleSubmit} */ >
       
-      <div style={{display:'flex',alignItems:'center'}} >
-        <Person sx={{ fontSize: 70,marginRight:'6px' }}/>
-        <div>
-            <input type="hidden" value={pessoaId}/>
+      <div style={{display:'flex',alignItems:'center'}} >        
+      <Person sx={{ fontSize: 50,marginRight:'6px' }}/>
+        <div style={{fontSize:'16px', lineHeight:'10px'}} >
+            <input type="hidden" value={contatoId}/>
             <p><b>Nome:</b> {nome??'Fulano de tal'}</p>
             <p><b>Email</b>: {email??'fulano@fulano.com'}</p>
+            <p><b>Telefone</b>: {telefone??'(11) 99999-9999'}</p>
+            <p><b>Whatsapp</b>: {whatsapp??'(11) 98888-8888'}</p>
         </div>
       </div>
-      <div style={ { display:'flex', justifyContent:'space-between'} } >
-        {/* <Button onClick={handleVerContato} variant="outlined">Ver contatos</Button>   */}
-        <FcContacts size={36} onClick={handleVerContato} style={{ cursor: 'pointer' }} />
-        <div>
-            {/* <Button  variant="contained">Editar Pessoa</Button> delete-icon */}  
-
-            <FaEdit className={styles.edit_icon} size={36} onClick={handleEdit}  style={{ cursor: 'pointer' }}  />
-            <FaTrash  className={styles.delete_icon}  size={36} onClick={handleDelete} style={{ cursor: 'pointer' }} />
-            
+      <div style={ { display:'flex', justifyContent:'flex-end', alignContent:'flex-end'} } >
+        <div>  
+          <Tooltip title="Editar">
+            <IconButton onClick={handleEdit}>
+              <FaEdit className={styles.edit_icon} size={36}   style={{ cursor: 'pointer' }}  />              
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Excluir">
+            <IconButton onClick={handleDelete}>
+              <FaTrash  className={styles.delete_icon}  size={36}  style={{ cursor: 'pointer' }} />
+            </IconButton>
+          </Tooltip>            
         </div>      
-
+        
       </div>
     </div>
     </>

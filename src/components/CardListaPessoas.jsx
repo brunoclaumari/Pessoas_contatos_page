@@ -1,14 +1,13 @@
 
-import styles from '@/styles/ListaCardPessoa.module.css';
-
 import { useEffect, useState } from "react";
 import CardPessoa from './CardPessoa';
 import { Api } from '../services/api';
-import ModalFormPessoa from './ModalFormPessoa';
+import ModalFormPessoa from './ModalFormPessoaNaoo';
 import ModalTeste from './ModalTeste';
 import { Button, TextField } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { ToastContainer, toast } from 'react-toastify';
+import styles from '@/styles/ListaCardPessoa.module.css';
 import "react-toastify/dist/ReactToastify.css";
 
 class Pessoa {
